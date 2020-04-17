@@ -17,10 +17,3 @@
   }
 }
 
-  // you need to do the below command "engines" to specify which npm
-  // and node versions to use on hiroku.
-
-// values in the udemy
-//"node": "8.1.1",
-//"npm": "5.0.3"
-// https://hidden-beyond-37232.herokuapp.com/ | https://git.heroku.com/hidden-beyond-37232.git
