@@ -1,5 +1,34 @@
 const express = require('express');
+const morgan = require('morgan');
+const mongoose = require('mongoose');
+const cookieSession = require('cookie-session');
+const passport = require('passport');
+require('./models/User');
+require('./services/passport'); // we can do this since we are not returning anything in the file so we dont need to assign a variable.
+const keys = require('./config/keys');
 const app = express();
+
+//Connect mongoose to mongoDB
+mongoose.connect(keys.mongoURI);
+
+// Tell express to use cookies in the application
+  // max age is in milliseconds ie 30 days.
+  // keys needs to be entered as an array however you only need to add one string to the array.
+  // cookie-sessionsassigns a cookie to the req.session property
+app.use(
+   cookieSession({
+      maxAge: 30 * 24 * 60 * 60 * 1000,
+      keys: [keys.cookieKey]
+   })
+);
+//Tells passport to use cookies
+app.use(passport.initialize());
+// Allows passport to parse the cookie to req.session- allows req.session to contain passport.userid
+app.use(passport.session());
+
+
+//Routing
+require('./routes/authRoutes')(app);
 
 app.get('/', (req, res) => {
     res.send({bye: 'buddy'});
@@ -31,4 +60,4 @@ app.get('/', (req, res) => {
 */}
 const PORT = process.env.PORT || 5000;
 // an answer in udemy said to provide the second argument '0.0.0.0' with heroku
-app.listen(PORT);
+app.listen(PORT, console.log(`server starting on port: ${PORT}`));
