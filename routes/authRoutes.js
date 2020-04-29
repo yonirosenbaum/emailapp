@@ -14,13 +14,22 @@ module.exports = (app) => {
    })
 );
 // this is the same address as the callbackurl in passport.use()
-   app.get('/auth/google/callback',
-   passport.authenticate('google')
+// passport.authenticate is a middleware so you need
+// another following route handler so it knows what to do.
+app.get('/auth/google/callback',
+   passport.authenticate('google'),
+   (req, res) => {res.redirect('/surveys')} 
 );
 
-   app.get('/api/logout', 
+app.get('/api/logout', 
    (req, res) => {
       // .logout() is a passport function and just removes the cookie
       req.logout()
+      res.redirect('/')
    });
+
+app.get('/api/current_user', (req, res) => {
+   res.send(req.user);
+ })
+
 };

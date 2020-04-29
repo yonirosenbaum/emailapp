@@ -1,14 +1,33 @@
-import React from 'react';
-//import {BrowserRouter as Router, Route} from 'react-router-dom'
+import React, {Component} from 'react';
+import {BrowserRouter, Route} from 'react-router-dom';
+import {connect} from 'react-redux';
+import * as actions from '../actions';
+
+import Header from './Header';
+import Landing from './Landing';
+const Dashboard = () => <h2>Dashboard</h2>
+const SurveryNew = () => <h2>SurveyNew</h2>
 
 
-class App extends React.Component{
-
+class App extends React.Component {
+    componentDidMount(){
+        this.props.fetchUser();
+    };
     render(){
-    return (
-        <div>React</div>
-    )
-}
-}
+      return(
+        // required this class for a root element with materialise-css
+        <div className="container">
+            <BrowserRouter>
+              <div>
+                  <Header/>
+                  <Route path='/' exact component={Landing}/>
+                  <Route path='/surveys' exact component={Dashboard}/>
+                  <Route path = '/survey/new' exact component={SurveryNew}/>
+              </div>
+            </BrowserRouter>
+        </div>
+      )
+    }
+};
 
-export default App;
+export default connect(null, actions)(App);

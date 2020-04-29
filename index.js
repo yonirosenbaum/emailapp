@@ -3,6 +3,7 @@ const morgan = require('morgan');
 const mongoose = require('mongoose');
 const cookieSession = require('cookie-session');
 const passport = require('passport');
+const bodyParser = require('body-parser');
 require('./models/User');
 require('./services/passport'); // we can do this since we are not returning anything in the file so we dont need to assign a variable.
 const keys = require('./config/keys');
@@ -10,6 +11,8 @@ const app = express();
 
 //Connect mongoose to mongoDB
 mongoose.connect(keys.mongoURI);
+
+app.use(bodyParser.json());
 
 // Tell express to use cookies in the application
   // max age is in milliseconds ie 30 days.
@@ -29,6 +32,22 @@ app.use(passport.session());
 
 //Routing
 require('./routes/authRoutes')(app);
+require('./routes/billingRoutes')(app);
+
+// These below lines are necessary as some routes are set on react-router-dom and not express routing.
+//Note: heroku automatically set the environment variable to production
+if (process.env.NODE_ENV = 'production'){
+   // express will serve production assets if we dont have a route handler for it
+   // ie main.css and main.js files
+   // THIS IS BEFORE THE BELOW APP.GET STATEMENT SINCE ONLY OF THESE CAN RUN
+   // AND THE APP.GET STATEMENT SERVES AS A CATCH REQUEST.
+   app.use(express.static('client/build'));
+   // express will serve index.html file if it doesn't recognise the route
+   const path = require('path');
+   app.get('*', (req, res) => {
+      res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'))
+   })
+}
 
 app.get('/', (req, res) => {
     res.send({bye: 'buddy'});
