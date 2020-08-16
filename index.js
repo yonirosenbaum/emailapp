@@ -4,7 +4,9 @@ const mongoose = require('mongoose');
 const cookieSession = require('cookie-session');
 const passport = require('passport');
 const bodyParser = require('body-parser');
+
 require('./models/User');
+require('./models/Survey');
 require('./services/passport'); // we can do this since we are not returning anything in the file so we dont need to assign a variable.
 const keys = require('./config/keys');
 const app = express();
@@ -33,6 +35,7 @@ app.use(passport.session());
 //Routing
 require('./routes/authRoutes')(app);
 require('./routes/billingRoutes')(app);
+require('./routes/surveyRoutes')(app);
 
 // These below lines are necessary as some routes are set on react-router-dom and not express routing.
 //Note: heroku automatically set the environment variable to production

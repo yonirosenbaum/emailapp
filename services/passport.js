@@ -33,7 +33,7 @@ passport.use(
               if (existingUser){
                  // user already exists
 
-                 //done stops the ouath response from hanging and allows you to continue from oauth to next webpage
+                 //done stops the yoouath response from hanging and allows you to continue from oauth to next webpage
                  //done first argument is an error object and second is the identifying piece of info (ie user record)
                  done(null, existingUser)
               } else {
